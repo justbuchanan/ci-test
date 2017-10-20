@@ -1,0 +1,11 @@
+
+dependencies:
+  pre:
+    - go get github.com/google/go-github/github
+
+test:
+  pre:
+    - go run main.go --token $GITHUB_API_TOKEN --state pending --description "loading..." --context test1
+
+  override:
+    - sleep 30 && go run main.go --token $GITHUB_API_TOKEN --state success --description "loading..." --context test1
