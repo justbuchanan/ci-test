@@ -32,9 +32,21 @@ func main() {
 
 	client := github.NewClient(tc)
 
-	repos, _, err := client.Repositories.List(ctx, "", nil)
+	target := "https://mytestfailure.com"
+	id := "mytest"
+	state := "pending"
+	desc := "Neutrinos must have bombarded the RAM and caused a memory error."
+
+	status := github.RepoStatus{
+		TargetURL:   &target,
+		State:       &state,
+		Description: &desc,
+		Context:     &id,
+	}
+	ss, resp, err := client.Repositories.CreateStatus(ctx, "justbuchanan", "ci-test", "8827dd06dfdf43f389b39b90f3d33d0e303bfc2d", &status)
 	checkErr(err)
-	printJson(repos)
+	log.Println(resp)
+	log.Println(ss)
 }
 
 func printJson(x interface{}) {
