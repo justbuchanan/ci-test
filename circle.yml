@@ -1,12 +1,17 @@
-dependencies:
-  pre:
-    - go get github.com/google/go-github/github
+# dependencies:
+  # post:
+  #   - go get github.com/google/go-github/github
+
+# env:
+#   - GITHUB_API_TOKEN=hello
+#   - ARTIFACT_DIR=./
 
 test:
   pre:
-    - go build .
+    - go build -o citask citask.go
 
   override:
-    - ./ci-test --context test1 --state pending && sleep 30 && ./ci-test --context test1 --state success
-    - ./ci-test --context test2 --state pending && sleep 30 && ./ci-test --context test2 --state success
-    - ./ci-test --context test3 --state pending && sleep 30 && ./ci-test --context test3 --state success
+    - ./citask --context test1 --description "tests" "sleep 30"
+    - ./citask --context test2 --description "tests" "sleep 30 && echo done"
+    - ./citask --context test3 --description "tests" "sleep 30 && echo done"
+    # - ./citask finish
