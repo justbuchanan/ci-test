@@ -20,10 +20,10 @@ func main() {
 	// Follow these directions to create a token:
 	// https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
 	var token = flag.String("token", "", "GitHub api token. Should be restricted to repo:status scope.")
-	var targetUrl = flag.String("target_url", "https://github.com", "Url that this status should redirect to.")
+	var targetUrl = flag.String("target_url", "", "Url that this status should redirect to.")
 	var statusCtxt = flag.String("context", "status", "Unique string identifier for this status. Something like 'compile', 'test', 'deploy'.")
 	var desc = flag.String("description", "", "Description of the test, etc.")
-	var state = flag.String("state", "error", "Repo status. Can be one of 'error', 'failure', 'pending', 'success'")
+	var state = flag.String("state", "", "Repo status. Can be one of 'error', 'failure', 'pending', 'success'")
 	var repo = flag.String("repo", "", "Repository name.")
 	var username = flag.String("username", "", "Username")
 	var rev = flag.String("rev", "", "Git commit/revision specifier")
@@ -31,6 +31,26 @@ func main() {
 
 	if *token == "" {
 		log.Fatal("Invalid GitHub status token")
+	}
+	if *state == "" {
+		log.Fatal("Please provide a state")
+	}
+	if *desc == "" {
+		log.Fatal("Please provide a description")
+	}
+
+	// pull from circleci env
+	if *repo == "" {
+		*repo = os.Getenv("CIRCLE_PROJECT_REPONAME")
+	}
+	if *rev == "" {
+		*rev = os.Getenv("CIRCLE_SHA1")
+	}
+	if *targetUrl == "" {
+		*targetUrl = os.Getenv("CIRCLE_BUILD_URL")
+	}
+	if *username == "" {
+		*username = os.Getenv("CIRCLE_PROJECT_USERNAME")
 	}
 
 	ctx := context.Background()
