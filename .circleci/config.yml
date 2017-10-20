@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      -image: circleci/go
+    steps:
+      - checkout
+      - run:  echo "hello world"
+  dostuff:
+    docker:
+      -image: circleci/go
+    steps:
+      - checkout
+      - run: sleep 30 && echo "did things"
+  phase3:
+    docker:
+      -image: circleci/go
+    steps:
+      - checkout
+      - run: echo "oops" && false
