@@ -32,9 +32,9 @@ func main() {
 	if *state == "" {
 		log.Fatal("Please provide a state")
 	}
-	if *desc == "" {
-		log.Fatal("Please provide a description")
-	}
+	// if *desc == "" {
+	// 	log.Fatal("Please provide a description")
+	// }
 
 	// pull from circleci env
 	if *token == "" {
