@@ -29,9 +29,6 @@ func main() {
 	var rev = flag.String("rev", "", "Git commit/revision specifier")
 	flag.Parse()
 
-	if *token == "" {
-		log.Fatal("Invalid GitHub status token")
-	}
 	if *state == "" {
 		log.Fatal("Please provide a state")
 	}
@@ -40,6 +37,9 @@ func main() {
 	}
 
 	// pull from circleci env
+	if *token == "" {
+		*repo = os.Getenv("GITHUB_API_TOKEN")
+	}
 	if *repo == "" {
 		*repo = os.Getenv("CIRCLE_PROJECT_REPONAME")
 	}

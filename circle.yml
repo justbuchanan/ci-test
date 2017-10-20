@@ -5,8 +5,9 @@ dependencies:
 
 test:
   pre:
-    - go run main.go --token $GITHUB_API_TOKEN --state pending --description "loading..." --context test1
+    - go build main.go -o ci-status
 
   override:
-    - sleep 30 && go run main.go --token $GITHUB_API_TOKEN --state success --description "loading..." --context test1
-    
+    - ./ci-status --context test1 --state pending && sleep 30 && ./ci-status --context test1 --state success
+    - ./ci-status --context test2 --state pending && sleep 30 && ./ci-status --context test2 --state success
+    - ./ci-status --context test3 --state pending && sleep 30 && ./ci-status --context test3 --state success
