@@ -39,6 +39,7 @@ func main() {
 	// pull from circleci env
 	if *token == "" {
 		*token = os.Getenv("GITHUB_API_TOKEN")
+		log.Println("t: ", *token)
 	}
 	if *repo == "" {
 		*repo = os.Getenv("CIRCLE_PROJECT_REPONAME")
