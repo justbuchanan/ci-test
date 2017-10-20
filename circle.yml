@@ -5,9 +5,9 @@ dependencies:
 
 test:
   pre:
-    - go build main.go -o ci-status
+    - go build .
 
   override:
-    - ./ci-status --context test1 --state pending && sleep 30 && ./ci-status --context test1 --state success
-    - ./ci-status --context test2 --state pending && sleep 30 && ./ci-status --context test2 --state success
-    - ./ci-status --context test3 --state pending && sleep 30 && ./ci-status --context test3 --state success
+    - ./ci-test --context test1 --state pending && sleep 30 && ./ci-test --context test1 --state success
+    - ./ci-test --context test2 --state pending && sleep 30 && ./ci-test --context test2 --state success
+    - ./ci-test --context test3 --state pending && sleep 30 && ./ci-test --context test3 --state success
