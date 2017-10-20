@@ -9,3 +9,4 @@ test:
 
   override:
     - sleep 30 && go run main.go --token $GITHUB_API_TOKEN --state success --description "loading..." --context test1
+    

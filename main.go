@@ -24,6 +24,9 @@ func main() {
 	var statusCtxt = flag.String("context", "status", "Unique string identifier for this status. Something like 'compile', 'test', 'deploy'.")
 	var desc = flag.String("description", "", "Description of the test, etc.")
 	var state = flag.String("state", "error", "Repo status. Can be one of 'error', 'failure', 'pending', 'success'")
+	var repo = flag.String("repo", "", "Repository name.")
+	var username = flag.String("username", "", "Username")
+	var rev = flag.String("rev", "", "Git commit/revision specifier")
 	flag.Parse()
 
 	if *token == "" {
@@ -42,7 +45,7 @@ func main() {
 		Description: &*desc,
 		Context:     &*statusCtxt,
 	}
-	ss, resp, err := client.Repositories.CreateStatus(ctx, "justbuchanan", "ci-test", "8827dd06dfdf43f389b39b90f3d33d0e303bfc2d", &status)
+	ss, resp, err := client.Repositories.CreateStatus(ctx, *username, *repo, *rev, &status)
 	checkErr(err)
 	log.Println(resp)
 	log.Println(ss)
