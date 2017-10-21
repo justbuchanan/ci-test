@@ -22,3 +22,4 @@ script:
   - ./citask --context t/test1 --description "tests" "sleep 30"
   - ./citask --context t/test2 --description "tests" "sleep 30 && echo done"
   - ./citask --context test3 --description "tests" "sleep 30 && echo done"
+
