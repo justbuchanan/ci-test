@@ -24,7 +24,7 @@ var status = &github.RepoStatus{
 	Description: new(string),
 	Context:     new(string),
 }
-var logDir string
+var artifactsDir string
 
 func main() {
 	// Follow these directions to create a token:
@@ -38,7 +38,7 @@ func main() {
 	flag.StringVar(status.TargetURL, "target_url", "", "Url that this status should redirect to.")
 	flag.StringVar(status.Context, "context", "status", "Unique string identifier for this status. Something like 'compile', 'test', or 'deploy'.")
 	flag.StringVar(status.Description, "description", "", "Description of the test, etc.")
-	flag.StringVar(&logDir, "logdir", "", "Artifacts directory.")
+	flag.StringVar(&artifactsDir, "artifacts-dir", "", "Artifacts directory.")
 
 	flag.Parse()
 
@@ -63,19 +63,13 @@ func main() {
 			defaultToEnv(&username, "CIRCLE_PROJECT_USERNAME")
 			defaultToEnv(&repo, "CIRCLE_PROJECT_REPONAME")
 			defaultToEnv(&rev, "CIRCLE_SHA1")
-			defaultToEnv(&logDir, "CIRCLE_ARTIFACTS")
-			// TODO: artifact urls
-			// "https://circle-artifacts.com/gh/${GITHUB_REPO}/${CIRCLE_BUILD_NUM}/artifacts/0$CIRCLE_ARTIFACTS/"
+			defaultToEnv(&artifactsDir, "CIRCLE_ARTIFACTS")
+
+			// "https://circleci.com/api/v1.1/project/:vcs-type/:org-name/:repo-name/:build_num/artifacts/:container-index/path/to/artifact"
+			// TODO: bitbucket?
 			buildNum := os.Getenv("CIRCLE_BUILD_NUM")
-			artifactsDir = os.Getenv("CIRCLE_ARTIFACTS")
-
-			// targetUrl := fmt.Sprintf("https://circle-artifacts.com/gh/%s/%s/artifacts/0%s/%s", repo, buildNum, artifactsDir, logfileName)
-
-			// "https://circleci.com/api/v1.1/project/github/justbuchanan/ci-test/:build_num/artifacts/:container-index/path/to/artifact"
-			targetUrl := fmt.Sprintf("https://circleci.com/api/v1.1/project/github/justbuchanan/ci-test/%s/artifacts/0%s/%s", buildNum, artifactsDir, logfileName)
-
-			// https://24-107631182-gh.circle-artifacts.com/0/tmp/circle-artifacts.jSz3IZL/test1.txt
-			status.TargetURL = &targetUrl
+			nodeIndex := os.Getenv("CIRCLE_NODE_INDEX")
+			*status.TargetURL = fmt.Sprintf("https://circleci.com/api/v1.1/project/github/%s/%s/%s/artifacts/%s%s/%s", username, repo, buildNum, nodeIndex, artifactsDir, logfileName)
 		} else if os.Getenv("TRAVIS") == "true" {
 			parts := strings.Split(os.Getenv("TRAVIS_REPO_SLUG"), "/")
 			if username == "" {
