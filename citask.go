@@ -54,7 +54,7 @@ func main() {
 
 	logfileName := status.GetContext() + ".txt"
 
-	artifactsDir := "./"
+	artifactsDir := ""
 
 	// get parameters from environment variables if they weren't given in args
 	defaultToEnv(&token, "GITHUB_API_TOKEN")
