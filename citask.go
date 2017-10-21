@@ -69,7 +69,12 @@ func main() {
 			buildNum := os.Getenv("CIRCLE_BUILD_NUM")
 			artifactsDir = os.Getenv("CIRCLE_ARTIFACTS")
 
-			targetUrl := fmt.Sprintf("https://circle-artifacts.com/gh/%s/%s/artifacts/0%s/%s", repo, buildNum, artifactsDir, logfileName)
+			// targetUrl := fmt.Sprintf("https://circle-artifacts.com/gh/%s/%s/artifacts/0%s/%s", repo, buildNum, artifactsDir, logfileName)
+
+			// "https://circleci.com/api/v1.1/project/github/justbuchanan/ci-test/:build_num/artifacts/:container-index/path/to/artifact"
+			targetUrl := fmt.Sprintf("https://circleci.com/api/v1.1/project/github/justbuchanan/ci-test/%s/artifacts/0/%s%s", buildNum, artifactsDir, logfileName)
+
+			// https://24-107631182-gh.circle-artifacts.com/0/tmp/circle-artifacts.jSz3IZL/test1.txt
 			status.TargetURL = &targetUrl
 		} else if os.Getenv("TRAVIS") == "true" {
 			parts := strings.Split(os.Getenv("TRAVIS_REPO_SLUG"), "/")
