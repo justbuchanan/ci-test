@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 	"log"
@@ -23,6 +24,7 @@ var status = &github.RepoStatus{
 	Description: new(string),
 	Context:     new(string),
 }
+var logDir string
 
 func main() {
 	// Follow these directions to create a token:
@@ -36,6 +38,7 @@ func main() {
 	flag.StringVar(status.TargetURL, "target_url", "", "Url that this status should redirect to.")
 	flag.StringVar(status.Context, "context", "status", "Unique string identifier for this status. Something like 'compile', 'test', or 'deploy'.")
 	flag.StringVar(status.Description, "description", "", "Description of the test, etc.")
+	flag.StringVar(&logDir, "logdir", "", "Artifacts directory.")
 
 	flag.Parse()
 
@@ -49,6 +52,10 @@ func main() {
 		log.Fatal("Please provide a description")
 	}
 
+	logfileName := status.GetContext() + ".txt"
+
+	artifactsDir := "./"
+
 	// get parameters from environment variables if they weren't given in args
 	defaultToEnv(&token, "GITHUB_API_TOKEN")
 	if os.Getenv("CI") == "true" {
@@ -56,7 +63,14 @@ func main() {
 			defaultToEnv(&username, "CIRCLE_PROJECT_USERNAME")
 			defaultToEnv(&repo, "CIRCLE_PROJECT_REPONAME")
 			defaultToEnv(&rev, "CIRCLE_SHA1")
-			defaultToEnv(status.TargetURL, "CIRCLE_BUILD_URL")
+			defaultToEnv(&logDir, "CIRCLE_ARTIFACTS")
+			// TODO: artifact urls
+			// "https://circle-artifacts.com/gh/${GITHUB_REPO}/${CIRCLE_BUILD_NUM}/artifacts/0$CIRCLE_ARTIFACTS/"
+			buildNum := os.Getenv("CIRCLE_BUILD_NUM")
+			artifactsDir = os.Getenv("CIRCLE_ARTIFACTS")
+
+			targetUrl := fmt.Sprintf("https://circle-artifacts.com/gh/%s/%s/artifacts/0%s/%s", repo, buildNum, artifactsDir, logfileName)
+			status.TargetURL = &targetUrl
 		} else if os.Getenv("TRAVIS") == "true" {
 			parts := strings.Split(os.Getenv("TRAVIS_REPO_SLUG"), "/")
 			if username == "" {
@@ -67,9 +81,11 @@ func main() {
 			}
 
 			defaultToEnv(&rev, "TRAVIS_COMMIT")
-			// defaultToEnv(status.TargetURL, "CIRCLE_BUILD_URL")
+			// TODO: artifacts directory
 		}
 	}
+
+	logfilePath := path.Join(artifactsDir, logfileName)
 
 	// TODO: validate params
 
@@ -82,7 +98,6 @@ func main() {
 	postStatus(client, ctx)
 
 	// open logfile
-	logfilePath := path.Join("./", status.GetContext()+".txt")
 	logfile, err := os.Create(logfilePath)
 	if err != nil {
 		log.Fatal(err)
