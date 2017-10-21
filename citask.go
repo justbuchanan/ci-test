@@ -65,11 +65,13 @@ func main() {
 			defaultToEnv(&rev, "CIRCLE_SHA1")
 			defaultToEnv(&artifactsDir, "CIRCLE_ARTIFACTS")
 
-			// "https://circleci.com/api/v1.1/project/:vcs-type/:org-name/:repo-name/:build_num/artifacts/:container-index/path/to/artifact"
-			// TODO: bitbucket?
-			buildNum := os.Getenv("CIRCLE_BUILD_NUM")
-			nodeIndex := os.Getenv("CIRCLE_NODE_INDEX")
-			*status.TargetURL = fmt.Sprintf("https://circleci.com/api/v1.1/project/github/%s/%s/%s/artifacts/%s%s/%s", username, repo, buildNum, nodeIndex, artifactsDir, logfileName)
+			if status.GetTargetURL() == "" {
+				// "https://circleci.com/api/v1.1/project/:vcs-type/:org-name/:repo-name/:build_num/artifacts/:container-index/path/to/artifact"
+				// TODO: bitbucket?
+				buildNum := os.Getenv("CIRCLE_BUILD_NUM")
+				nodeIndex := os.Getenv("CIRCLE_NODE_INDEX")
+				*status.TargetURL = fmt.Sprintf("https://circleci.com/api/v1.1/project/github/%s/%s/%s/artifacts/%s%s/%s", username, repo, buildNum, nodeIndex, artifactsDir, logfileName)
+			}
 		} else if os.Getenv("TRAVIS") == "true" {
 			parts := strings.Split(os.Getenv("TRAVIS_REPO_SLUG"), "/")
 			if username == "" {
