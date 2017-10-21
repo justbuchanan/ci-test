@@ -10,10 +10,6 @@ cache: apt
 before_install:
   - sudo apt-get install -y go
 
-branches:
-  only:
-    -master
-
 before_script:
   - echo before
   - go build -o citask citask.go
