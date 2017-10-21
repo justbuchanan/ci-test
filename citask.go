@@ -83,6 +83,8 @@ func main() {
 
 			defaultToEnv(&rev, "TRAVIS_COMMIT")
 			// TODO: artifacts directory
+
+			*status.TargetURL = fmt.Sprintf("https://travis-ci.org/justbuchanan/ci-test/builds/%s", os.Getenv("TRAVIS_BUILD_ID"))
 		}
 	}
 
