@@ -4,9 +4,6 @@ dist: trusty
 sudo: required
 cache: apt
 
-# before_install:
-  # - sudo apt-get install -y go
-
 before_script:
   - go get -u github.com/justbuchanan/ci-status
 
