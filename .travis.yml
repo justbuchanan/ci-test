@@ -15,6 +15,6 @@ before_script:
   - go build -o citask citask.go
 
 script:
-  - ./citask --context t-test1 --description "tests" "sleep 30"
-  - ./citask --context t-test2 --description "tests" "sleep 30 && echo done"
-  - ./citask --context test3 --description "tests" "sleep 30 && echo done"
+  - ./citask --context t-test1 --description "tests" "sleep 5"
+  - ./citask --context t-test2 --description "tests" "sleep 5 && echo done"
+  - ./citask --context test3 --description "tests" "sleep 5 && echo done"
