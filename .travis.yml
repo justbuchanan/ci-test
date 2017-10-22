@@ -1,6 +1,3 @@
-language: go
-
-
 os: linux
 compiler: gcc
 dist: trusty
