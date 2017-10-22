@@ -11,10 +11,9 @@ cache: apt
   # - sudo apt-get install -y go
 
 before_script:
-  - echo before
-  - go build -o citask citask.go
+  - go get -u github.com/justbuchanan/ci-status
 
 script:
-  - ./citask --context t-test1 --description "tests" "sleep 5"
-  - ./citask --context t-test2 --description "tests" "sleep 5 && echo done"
-  - ./citask --context test3 --description "tests" "sleep 5 && echo done"
+  - ci-status --context t-test1 --description "tests" "sleep 5"
+  - ci-status --context t-test2 --description "tests" "sleep 5 && echo done"
+  - ci-status --context test3 --description "tests" "sleep 5 && echo done"

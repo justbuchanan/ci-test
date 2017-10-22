@@ -1,17 +1,11 @@
-# dependencies:
-  # post:
-  #   - go get github.com/google/go-github/github
-
 # env:
-#   - GITHUB_API_TOKEN=hello
 #   - ARTIFACT_DIR=./
 
 test:
   pre:
-    - go build -o citask citask.go
+    - go get -u github.com/justbuchanan/ci-status
 
   override:
-    - ./citask --context test1 --description "tests" "sleep 30"
-    - ./citask --context test2 --description "tests" "sleep 30 && echo done"
-    - ./citask --context test3 --description "tests" "sleep 30 && echo done"
-    # - ./citask finish
+    - ci-status --context test1 --description "tests" "sleep 30"
+    - ci-status --context test2 --description "tests" "sleep 30 && echo done"
+    - ci-status --context test3 --description "tests" "sleep 30 && echo done"
