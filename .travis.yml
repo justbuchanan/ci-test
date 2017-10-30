@@ -8,6 +8,6 @@ before_script:
   - go get -u github.com/justbuchanan/ci-status
 
 script:
-  - ci-status --context t-test1 --description "tests" "sleep 5"
-  - ci-status --context t-test2 --description "tests" "sleep 5 && echo done"
-  - ci-status --context test3 --description "tests" "sleep 5 && echo done"
+  - ci-status --context travis-test1 --description "tests" "sleep 5"
+  - ci-status --context travis-test2 --description "tests" "sleep 5 && echo done"
+  - ci-status --context travis-test3 --description "tests" "sleep 5 && echo done"
